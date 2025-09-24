@@ -1,6 +1,9 @@
 import { AnimatedButton } from '@/components/ui/AnimatedButton';
+import Entypo from '@expo/vector-icons/Entypo';
+import Feather from '@expo/vector-icons/Feather';
+
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
-import { Text, View } from 'react-native';
 
 export default function RootLayout() {
   return (
@@ -9,6 +12,7 @@ export default function RootLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: '#000',
+          height: 90,
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -16,10 +20,21 @@ export default function RootLayout() {
         },
         tabBarInactiveTintColor: '#e0e0e09d',
         tabBarActiveTintColor: '#fff',
-        tabBarLabelPosition: 'below-icon',
       }}>
-      <Tabs.Screen name="(tabs)" options={{ title: 'Home' }} />
-      <Tabs.Screen name="friends" options={{ title: 'Friends' }} />
+      <Tabs.Screen
+        name="(tabs)"
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ focused, color }) => <Entypo name="home" size={25} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="friends"
+        options={{
+          title: 'Friends',
+          tabBarIcon: ({ focused, color }) => <Feather name="users" size={25} color={color} />,
+        }}
+      />
       <Tabs.Screen
         name="create"
         options={{
@@ -27,8 +42,20 @@ export default function RootLayout() {
           tabBarButton: (props) => <AnimatedButton onPress={props.onPress} />,
         }}
       />
-      <Tabs.Screen name="inbox" options={{ title: 'Inbox' }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
+      <Tabs.Screen
+        name="inbox"
+        options={{
+          title: 'Inbox',
+          tabBarIcon: ({ focused, color }) => <Ionicons name="chatbox-outline" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ focused, color }) => <Feather name="user" size={24} color={color} />,
+        }}
+      />
     </Tabs>
   );
 }
