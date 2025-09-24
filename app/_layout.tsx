@@ -1,9 +1,17 @@
 import { AnimatedButton } from '@/components/ui/AnimatedButton';
 import Entypo from '@expo/vector-icons/Entypo';
 import Feather from '@expo/vector-icons/Feather';
-
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
+
+/*
+TO-DO:
+-------
+ - create page open camera
+ - side layout on Content for comments/likes/saves/user
+ - play bar on content video length
+ - double speed hold down on right side of screen (only)
+*/
 
 export default function RootLayout() {
   return (
