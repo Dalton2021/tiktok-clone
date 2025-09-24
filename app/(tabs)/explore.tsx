@@ -1,9 +1,9 @@
 import { Text, View } from 'react-native';
 
-export default function FriendsScreen() {
+export default function ExploreScreen() {
   return (
     <View>
-      <Text>Hello Friends</Text>
+      <Text>Hello Explore</Text>
     </View>
   );
 }
