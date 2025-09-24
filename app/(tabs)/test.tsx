@@ -28,7 +28,7 @@ const data = [
   },
 ];
 
-export default function HomeScreen() {
+export default function TestScreen() {
   return (
     <View>
       <Content data={data} />

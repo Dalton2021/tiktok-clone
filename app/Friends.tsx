@@ -28,7 +28,7 @@ const data = [
   },
 ];
 
-export default function HomeScreen() {
+export default function Friends() {
   return (
     <View>
       <Content data={data} />
