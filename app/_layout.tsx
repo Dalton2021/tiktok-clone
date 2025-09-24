@@ -1,22 +1,23 @@
+import { AnimatedButton } from '@/components/ui/AnimatedButton';
 import { Tabs } from 'expo-router';
-import { Image } from 'react-native';
 
 export default function RootLayout() {
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+      }}>
       <Tabs.Screen name="(tabs)" options={{ title: 'Home' }} />
-      <Tabs.Screen name="Friends" />
+      <Tabs.Screen name="friends" options={{ title: 'Friends' }} />
       <Tabs.Screen
-        name="Create"
+        name="create"
         options={{
           title: '',
-          tabBarIcon: ({ focused }) => (
-            <Image source={require('../assets/images/addButton.png')} style={{ width: 24, height: 24 }} />
-          ),
+          tabBarButton: (props) => <AnimatedButton onPress={props.onPress} />,
         }}
       />
-      <Tabs.Screen name="Inbox" />
-      <Tabs.Screen name="Profile" />
+      <Tabs.Screen name="inbox" options={{ title: 'Inbox' }} />
+      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
     </Tabs>
   );
 }
