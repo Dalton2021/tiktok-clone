@@ -1,11 +1,22 @@
 import { AnimatedButton } from '@/components/ui/AnimatedButton';
 import { Tabs } from 'expo-router';
+import { Text, View } from 'react-native';
 
 export default function RootLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarStyle: {
+          backgroundColor: '#000',
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '700',
+        },
+        tabBarInactiveTintColor: '#e0e0e09d',
+        tabBarActiveTintColor: '#fff',
+        tabBarLabelPosition: 'below-icon',
       }}>
       <Tabs.Screen name="(tabs)" options={{ title: 'Home' }} />
       <Tabs.Screen name="friends" options={{ title: 'Friends' }} />
