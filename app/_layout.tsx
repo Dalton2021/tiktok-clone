@@ -6,9 +6,6 @@ const RootLayout = () => {
     <Stack
       screenOptions={{
         headerShown: false,
-        contentStyle: {
-          backgroundColor: '#000',
-        },
       }}
       initialRouteName="(bottom-tabs)">
       <Stack.Screen name="(bottom-tabs)" />
@@ -17,6 +14,11 @@ const RootLayout = () => {
         name="create"
         options={{
           presentation: 'modal',
+          animation: 'fade',
+          contentStyle: {
+            flex: 1,
+            backgroundColor: '#000',
+          },
         }}
       />
     </Stack>

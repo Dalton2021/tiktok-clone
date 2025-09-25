@@ -1,9 +1,5 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 export default function CreateScreenPlaceHolder() {
-  return (
-    <View>
-      <Text>hello there</Text>
-    </View>
-  );
+  return <View style={{ flex: 1, backgroundColor: '#000' }} />;
 }

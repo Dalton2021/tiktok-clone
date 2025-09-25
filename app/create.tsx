@@ -1,11 +1,12 @@
 import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const CreateScreen = () => {
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (permission && !permission.granted) {
@@ -17,6 +18,20 @@ const CreateScreen = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permission]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault();
+
+      // slightly faster way to go back before the empty page renders.
+      router.back();
+
+      // Then complete the removal
+      navigation.dispatch(e.data.action);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   if (!permission || !permission.granted) {
     return <View style={styles.loadingContainer} />;
