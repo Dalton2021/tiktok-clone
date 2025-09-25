@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Tabs = withLayoutContext(createMaterialTopTabNavigator().Navigator);
 
-export default function TabLayout() {
+export default function TopTabsLayout() {
   const insets = useSafeAreaInsets();
   const screenWidth = Dimensions.get('window').width;
   // const numberOfTabs = 4;
