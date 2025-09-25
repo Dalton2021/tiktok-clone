@@ -24,10 +24,20 @@ export default function TabLayout() {
           shadowOpacity: 0.05,
           zIndex: 1,
           borderBottomWidth: 0,
+          maxHeight: 50
+          // flex: 1,
         },
         tabBarLabelStyle: {
+          // width: 'auto',
+          width: '100%',
+          textAlign: 'auto',
+          height: '100%',
           fontSize: 16,
           fontWeight: '700',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          alignContent: 'center',
         },
         tabBarInactiveTintColor: '#e0e0e09d',
         tabBarActiveTintColor: '#fff',
@@ -45,6 +55,8 @@ export default function TabLayout() {
       <Tabs.Screen name="following" options={{ title: 'Following' }} />
       <Tabs.Screen name="shop" options={{ title: 'Shop' }} />
       <Tabs.Screen name="index" options={{ title: 'For You' }} />
+      <Tabs.Screen name="search" options={{ title: 'Search', href: '/' }} />
+     
     </Tabs>
   );
 }
