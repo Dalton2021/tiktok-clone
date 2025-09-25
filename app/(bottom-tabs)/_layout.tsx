@@ -51,7 +51,7 @@ export default function BottomTabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="create"
+        name="create-placeholder"
         options={{
           title: '',
           tabBarButton: (props) => <AnimatedButton onPress={props.onPress} />,

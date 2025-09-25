@@ -6,6 +6,7 @@ const RootLayout = () => {
     <Stack screenOptions={{ headerShown: false }} initialRouteName="(bottom-tabs)">
       <Stack.Screen name="(bottom-tabs)" />
       <Stack.Screen name="search" />
+      <Stack.Screen name="create" />
     </Stack>
   );
 };

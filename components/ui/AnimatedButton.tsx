@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useRef } from 'react';
 import { Animated, TouchableOpacity, TouchableWithoutFeedbackProps } from 'react-native';
 
@@ -20,6 +21,8 @@ export const AnimatedButton = ({ onPress }: TouchableWithoutFeedbackProps) => {
         useNativeDriver: true,
       }).start();
     }, 50);
+
+    router.push('/create');
   };
 
   return (
