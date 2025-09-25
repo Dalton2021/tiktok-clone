@@ -64,6 +64,7 @@ export default function RootLayout() {
           tabBarIcon: ({ focused, color }) => <Feather name="user" size={24} color={color} />,
         }}
       />
+      <Tabs.Screen name="search" options={{ href: null }} />
     </Tabs>
   );
 }
