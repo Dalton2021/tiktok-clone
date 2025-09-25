@@ -1,6 +1,8 @@
 import { AnimatedButton } from '@/components/ui/AnimatedButton';
 import Entypo from '@expo/vector-icons/Entypo';
 import Feather from '@expo/vector-icons/Feather';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
 
@@ -40,7 +42,12 @@ export default function BottomTabsLayout() {
         name="friends"
         options={{
           title: 'Friends',
-          tabBarIcon: ({ focused, color }) => <Feather name="users" size={25} color={color} />,
+          tabBarIcon: ({ focused, color }) =>
+            focused ? (
+              <FontAwesome6 name="user-group" size={20} color={color} />
+            ) : (
+              <Feather name="users" size={24} color={color} />
+            ),
         }}
       />
       <Tabs.Screen
@@ -54,14 +61,21 @@ export default function BottomTabsLayout() {
         name="inbox"
         options={{
           title: 'Inbox',
-          tabBarIcon: ({ focused, color }) => <Ionicons name="chatbox-outline" size={24} color={color} />,
+          tabBarIcon: ({ focused, color }) =>
+            focused ? (
+              <Ionicons name="chatbox" size={24} color={color} />
+            ) : (
+              <Ionicons name="chatbox-outline" size={24} color={color} />
+            ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ focused, color }) => <Feather name="user" size={24} color={color} />,
+          tabBarIcon: ({ focused, color }) => (
+            <FontAwesome5 name={focused ? 'user-alt' : 'user'} size={22} color={color} />
+          ),
         }}
       />
     </Tabs>
