@@ -9,8 +9,8 @@ const Tabs = withLayoutContext(createMaterialTopTabNavigator().Navigator);
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   const screenWidth = Dimensions.get('window').width;
-  const numberOfTabs = 4;
-  const indicatorWidth = 25;
+  // const numberOfTabs = 4;
+  // const indicatorWidth = 25;
   const router = useRouter();
 
   return (
@@ -37,7 +37,6 @@ export default function TabLayout() {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'transparent',
-            paddingBottom: 10,
             height: 50,
           }}>
           <Text
@@ -65,27 +64,32 @@ export default function TabLayout() {
             borderBottomWidth: 0,
             height: 50,
           },
+          tabBarItemStyle: {
+            width: 'auto',
+            paddingHorizontal: 12, // Add horizontal padding for spacing
+          },
           tabBarLabelStyle: {
-            width: '100%',
-            textAlign: 'auto',
-            height: '100%',
             fontSize: 16,
             fontWeight: '700',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            alignContent: 'center',
+            textAlign: 'center',
           },
           tabBarInactiveTintColor: '#e0e0e09d',
           tabBarActiveTintColor: '#fff',
           tabBarIndicatorStyle: {
             backgroundColor: '#fff',
             height: 2,
-            width: indicatorWidth,
-            bottom: 10
+            // width: indicatorWidth,
+            width: 0.25,
+            bottom: 10,
           },
-          tabBarIndicatorContainerStyle: {
-            marginLeft: (screenWidth / numberOfTabs - indicatorWidth) / 2.5,
+          // tabBarIndicatorContainerStyle: {
+          //   // marginLeft: (screenWidth / numberOfTabs - indicatorWidth) / 2.5,
+          //   // marginLeft: -8,
+          // },
+          // tabBarScrollEnabled: true, // Enable this to allow content-based sizing
+          tabBarContentContainerStyle: {
+            paddingHorizontal: 8,
+           borderBottomWidth: 0
           },
         }}
         initialRouteName="index">
