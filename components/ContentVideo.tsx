@@ -2,15 +2,9 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { LinearGradient } from 'expo-linear-gradient';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
-import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle, Animated } from 'react-native';
+import { PanGestureHandler, State, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ProgressBar } from 'react-native-paper';
-
-/*
-TO-DO:
--------
- - pull to refresh -> add this to hitting the home button too
-*/
 
 interface ContentVideoProps {
   source: string;
@@ -20,13 +14,13 @@ interface ContentVideoProps {
   active: boolean;
 }
 
-// handles mapping to assets/videos. Is this too large a variable?
+// handles mapping to assets/videos
 const allVideos = require.context('../assets/videos', false, /\.mp4$/);
 
 // video map
 const videoAssets: { [key: string]: any } = {};
 allVideos.keys().forEach((key: string) => {
-  const fileName = key.replace('./', ''); // Remove './' prefix
+  const fileName = key.replace('./', '');
   videoAssets[fileName] = allVideos(key);
 });
 
@@ -36,9 +30,14 @@ const ContentVideo = ({ source, style, children, height, active }: ContentVideoP
   const [duration, setDuration] = useState<number>(0);
   const [progressBarWidth, setProgressBarWidth] = useState<number>(0);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [dragProgress, setDragProgress] = useState<number>(0);
+
+  // Use Animated.Value for smooth drag progress
+  const animatedProgress = useRef(new Animated.Value(0)).current;
+  const [displayProgress, setDisplayProgress] = useState<number>(0);
+
   const progressBarRef = useRef<View>(null);
-  const seekTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const rafId = useRef<number | null>(null);
+  const lastSeekTime = useRef<number>(0);
   const videoSource = videoAssets[source];
 
   const player = useVideoPlayer(videoSource, (player) => {
@@ -51,7 +50,6 @@ const ContentVideo = ({ source, style, children, height, active }: ContentVideoP
     } else {
       player.play();
     }
-
     setIsPlaying(!isPlaying);
   }, [isPlaying, player]);
 
@@ -67,81 +65,138 @@ const ContentVideo = ({ source, style, children, height, active }: ContentVideoP
     }
   }, [active, player]);
 
-  // Track video progress and duration
+  // Track video progress and duration with smooth updates
   useEffect(() => {
-    const interval = setInterval(() => {
+    const updateProgress = () => {
       if (player && active && !isDragging) {
-        setCurrentTime(player.currentTime);
-        if (player.duration) {
-          setDuration(player.duration);
+        const time = player.currentTime;
+        const dur = player.duration || 0;
+
+        setCurrentTime(time);
+        setDuration(dur);
+
+        if (dur > 0) {
+          const progress = time / dur;
+          // Animate to new progress for smoother visual
+          Animated.timing(animatedProgress, {
+            toValue: progress,
+            duration: 100,
+            useNativeDriver: false,
+          }).start();
+          setDisplayProgress(progress);
         }
       }
-    }, 100); // Update every 100ms for smooth progress
+    };
 
+    const interval = setInterval(updateProgress, 100);
     return () => clearInterval(interval);
-  }, [player, active, isDragging]);
+  }, [player, active, isDragging, animatedProgress]);
 
-  // Cleanup timeout on unmount
+  // Cleanup RAF on unmount
   useEffect(() => {
     return () => {
-      if (seekTimeoutRef.current) {
-        clearTimeout(seekTimeoutRef.current);
+      if (rafId.current) {
+        cancelAnimationFrame(rafId.current);
       }
     };
   }, []);
 
-  // Calculate progress (0 to 1 for react-native-paper)
-  const progress = isDragging ? dragProgress / 100 : duration > 0 ? currentTime / duration : 0;
+  // Calculate progress for display
+  const progress = isDragging ? displayProgress : displayProgress;
 
-  // Handle seeking on progress bar
+  // Handle direct tap on progress bar
   const handleProgressBarPress = (event: any) => {
-    const { locationX } = event.nativeEvent;
+    if (isDragging) return; // Ignore taps while dragging
 
+    const { locationX } = event.nativeEvent;
     event.target.measure((x: number, y: number, width: number) => {
-      const percentage = locationX / width;
+      const percentage = Math.max(0, Math.min(1, locationX / width));
       const newTime = percentage * duration;
       player.currentTime = newTime;
+      setDisplayProgress(percentage);
+
+      // Animate to new position
+      Animated.timing(animatedProgress, {
+        toValue: percentage,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
     });
   };
 
-  // Debounced seek function
-  const debouncedSeek = useCallback(
-    (time: number) => {
-      if (seekTimeoutRef.current) {
-        clearTimeout(seekTimeoutRef.current);
-      }
-      seekTimeoutRef.current = setTimeout(() => {
-        player.currentTime = time;
-      }, 50); // 50ms debounce
-    },
-    [player]
-  );
+  // Throttled seek with RAF for smooth updates
+  const seekToPosition = useCallback((percentage: number) => {
+    if (rafId.current) {
+      cancelAnimationFrame(rafId.current);
+    }
 
-  // Handle pan gesture for seeking
-  const handlePanGesture = (event: any) => {
-    const { state, x } = event.nativeEvent;
+    rafId.current = requestAnimationFrame(() => {
+      const now = Date.now();
+      // Throttle actual seeks to every 50ms
+      if (now - lastSeekTime.current > 50) {
+        const newTime = percentage * duration;
+        player.currentTime = newTime;
+        lastSeekTime.current = now;
+      }
+      rafId.current = null;
+    });
+  }, [player, duration]);
+
+  // Improved pan gesture handler
+  const handlePanGesture = useCallback((event: any) => {
+    const { state, x, translationX, velocityX } = event.nativeEvent;
 
     if (state === State.BEGAN) {
       setIsDragging(true);
+      // Pause the player while dragging for better performance
+      if (isPlaying) {
+        player.pause();
+      }
     } else if (state === State.ACTIVE) {
       if (progressBarWidth > 0) {
-        const percentage = Math.max(0, Math.min(100, (x / progressBarWidth) * 100));
-        setDragProgress(percentage);
+        // Use absolute position for more accurate tracking
+        const percentage = Math.max(0, Math.min(1, x / progressBarWidth));
 
-        // Debounced seek for smoother performance
-        const newTime = (percentage / 100) * duration;
-        debouncedSeek(newTime);
+        // Update visual immediately for responsiveness
+        setDisplayProgress(percentage);
+
+        // Use native driver for smoother animation
+        animatedProgress.setValue(percentage);
+
+        // Throttled seek to video position
+        seekToPosition(percentage);
       }
     } else if (state === State.END || state === State.CANCELLED) {
-      setIsDragging(false);
-      // Final seek on gesture end
+      // Apply velocity for momentum (optional)
       if (progressBarWidth > 0) {
-        const percentage = Math.max(0, Math.min(1, x / progressBarWidth));
-        const newTime = percentage * duration;
+        let finalPercentage = Math.max(0, Math.min(1, x / progressBarWidth));
+
+        // Add subtle momentum based on velocity
+        if (Math.abs(velocityX) > 100) {
+          const momentum = velocityX / progressBarWidth * 0.05; // Subtle momentum
+          finalPercentage = Math.max(0, Math.min(1, finalPercentage + momentum));
+        }
+
+        const newTime = finalPercentage * duration;
         player.currentTime = newTime;
+        setDisplayProgress(finalPercentage);
+
+        // Smooth animation to final position
+        Animated.timing(animatedProgress, {
+          toValue: finalPercentage,
+          duration: 150,
+          useNativeDriver: false,
+        }).start();
+      }
+
+      setIsDragging(false);
+
+      // Resume playback if it was playing before
+      if (isPlaying) {
+        setTimeout(() => player.play(), 100);
       }
     }
-  };
+  }, [progressBarWidth, duration, player, isPlaying, animatedProgress, seekToPosition]);
 
   // Get progress bar width when component mounts or updates
   const onProgressBarLayout = (event: any) => {
@@ -150,7 +205,7 @@ const ContentVideo = ({ source, style, children, height, active }: ContentVideoP
   };
 
   return (
-    <View style={[style, { height, position: 'relative' }]}>
+    <GestureHandlerRootView style={[style, { height, position: 'relative' }]}>
       {/* Video layer - absolute positioned behind everything */}
       <View style={styles.videoContainer}>
         <VideoView
@@ -163,7 +218,7 @@ const ContentVideo = ({ source, style, children, height, active }: ContentVideoP
         />
       </View>
 
-      {/* Shadow/Vignette overlay - lets the text display a hair better */}
+      {/* Shadow/Vignette overlay */}
       <LinearGradient
         colors={['transparent', 'rgba(0, 0, 0, 0.44)']}
         style={styles.shadowOverlay}
@@ -185,27 +240,49 @@ const ContentVideo = ({ source, style, children, height, active }: ContentVideoP
         {children}
       </View>
 
-      {/* Video Progress Bar using react-native-paper */}
+      {/* Video Progress Bar with smooth dragging */}
       {active && (
         <PanGestureHandler
           onGestureEvent={handlePanGesture}
           onHandlerStateChange={handlePanGesture}
           shouldCancelWhenOutside={false}
           minPointers={1}
-          maxPointers={1}>
-          <View style={styles.progressBarContainer} ref={progressBarRef} onLayout={onProgressBarLayout}>
-            <Pressable onPress={handleProgressBarPress}>
-              <ProgressBar progress={progress} color={isDragging ? "#fff" : "#eeeeee6e"} style={styles.progressBar} />
+          maxPointers={1}
+          hitSlop={{ top: 20, bottom: 20, left: 0, right: 0 }}>
+          <View
+            style={styles.progressBarContainer}
+            ref={progressBarRef}
+            onLayout={onProgressBarLayout}>
+            <Pressable
+              onPress={handleProgressBarPress}
+              style={styles.progressBarPressable}>
+              <ProgressBar
+                progress={progress}
+                color={isDragging ? "#fff" : "#eeeeee6e"}
+                style={[
+                  styles.progressBar,
+                  isDragging && styles.progressBarDragging
+                ]}
+              />
               {isDragging && (
-                <View style={[styles.progressThumb, { left: `${(progress * 100)}%` }]}>
+                <Animated.View
+                  style={[
+                    styles.progressThumb,
+                    {
+                      left: animatedProgress.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['0%', '100%'],
+                      })
+                    }
+                  ]}>
                   <View style={styles.thumbIcon} />
-                </View>
+                </Animated.View>
               )}
             </Pressable>
           </View>
         </PanGestureHandler>
       )}
-    </View>
+    </GestureHandlerRootView>
   );
 };
 
@@ -262,36 +339,43 @@ const styles = StyleSheet.create({
   },
   progressBarContainer: {
     position: 'absolute',
-    bottom: -12, // Move container down to maintain visual position
+    bottom: -12,
     left: 0,
     right: 0,
-    // paddingHorizontal: 4,
-    paddingVertical: 12, // Restore gesture area
+    paddingVertical: 12,
     zIndex: 4,
+  },
+  progressBarPressable: {
+    // Add extra touch area for easier interaction
+    paddingVertical: 8,
+    marginVertical: -8,
   },
   progressBar: {
     height: 3,
     borderRadius: 2,
     backgroundColor: 'rgba(206, 206, 206, 0.3)',
   },
+  progressBarDragging: {
+    height: 4, // Slightly larger when dragging for visual feedback
+  },
   progressThumb: {
     position: 'absolute',
-    top: -8,
-    marginLeft: -8,
-    width: 16,
-    height: 16,
+    top: 0, // Adjusted since we're inside the pressable now
+    marginLeft: -10,
+    width: 20,
+    height: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
   thumbIcon: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    width: 14,
+    height: 14,
+    borderRadius: 7,
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
+    elevation: 5,
   },
 });
