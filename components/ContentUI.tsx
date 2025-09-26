@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 17.5,
+    marginBottom: 10
   },
   activityPressableContainer: {
     paddingVertical: 9,
