@@ -13,9 +13,9 @@ interface ContentProps {
 const { height } = Dimensions.get('window');
 function getRandomHex(): string {
   // Generate RGB values in the lighter range (e.g., 128–255)
-  const r = Math.floor(128 + Math.random() * 128);
-  const g = Math.floor(128 + Math.random() * 128);
-  const b = Math.floor(128 + Math.random() * 128);
+  const r = Math.floor(50 + Math.random() * 128);
+  const g = Math.floor(30 + Math.random() * 128);
+  const b = Math.floor(80 + Math.random() * 128);
 
   // Convert to hex and return
   return '#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('');
@@ -32,8 +32,8 @@ export default function Content({ data }: ContentProps) {
         decelerationRate={'fast'}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <View style={[styles.ContentView, { backgroundColor: getRandomHex() }]}>
-            <Text>{item.title}</Text>
+          <View style={[styles.contentView, { backgroundColor: getRandomHex() }]}>
+            <Text style={styles.text}>{item.title}</Text>
           </View>
         )}
       />
@@ -42,12 +42,15 @@ export default function Content({ data }: ContentProps) {
 }
 
 const styles = StyleSheet.create({
-  ContentView: {
+  contentView: {
     height,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: getRandomHex(),
     borderBottomWidth: 1,
     borderBottomColor: '#3b3b3b96',
+  },
+  text: {
+    color: '#fff',
   },
 });

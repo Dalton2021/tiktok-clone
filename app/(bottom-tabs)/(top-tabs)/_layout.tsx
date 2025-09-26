@@ -1,7 +1,7 @@
-import Feather from '@expo/vector-icons/Feather';
+import SearchButton from '@/components/ui/SearchButton';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useRouter, withLayoutContext } from 'expo-router';
-import { Dimensions, Pressable, Text, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Tabs = withLayoutContext(createMaterialTopTabNavigator().Navigator);
@@ -11,45 +11,10 @@ export default function TopTabsLayout() {
   const screenWidth = Dimensions.get('window').width;
   // const numberOfTabs = 4;
   // const indicatorWidth = 25;
-  const router = useRouter();
 
   return (
     <View style={{ flex: 1 }}>
-      <View
-        style={{
-          position: 'absolute',
-          top: insets.top,
-          left: 0,
-          right: 0,
-          flexDirection: 'row',
-          backgroundColor: 'transparent',
-          zIndex: 2,
-          height: 50,
-        }}
-        pointerEvents="box-none">
-        <View style={{ flex: 4 }} pointerEvents="auto" />
-        <Pressable
-          onPress={() => {
-            router.push('/search');
-          }}
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'transparent',
-            height: 50,
-          }}>
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 18,
-              fontWeight: 'bold',
-            }}>
-            <Feather name="search" size={24} />
-          </Text>
-        </Pressable>
-      </View>
-
+      <SearchButton />
       <Tabs
         screenOptions={{
           tabBarStyle: {
@@ -89,7 +54,7 @@ export default function TopTabsLayout() {
           // tabBarScrollEnabled: true, // Enable this to allow content-based sizing
           tabBarContentContainerStyle: {
             paddingHorizontal: 8,
-           borderBottomWidth: 0
+            borderBottomWidth: 0,
           },
         }}
         initialRouteName="index">
