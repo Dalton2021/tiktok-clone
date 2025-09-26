@@ -41,9 +41,9 @@ export default function TopTabsLayout() {
           }}>
           <Text
             style={{
-              color: '#e0e0e09d',
+              color: '#fff',
               fontSize: 18,
-              fontWeight: '700',
+              fontWeight: 'bold',
             }}>
             <Feather name="search" size={24} />
           </Text>
@@ -70,7 +70,7 @@ export default function TopTabsLayout() {
           },
           tabBarLabelStyle: {
             fontSize: 16,
-            fontWeight: '700',
+            fontWeight: 'bold',
             textAlign: 'center',
           },
           tabBarInactiveTintColor: '#e0e0e09d',

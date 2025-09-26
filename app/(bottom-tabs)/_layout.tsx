@@ -4,7 +4,7 @@ import Feather from '@expo/vector-icons/Feather';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Tabs } from 'expo-router';
+import { Tabs, useSegments } from 'expo-router';
 
 /*
 TO-DO:
@@ -15,21 +15,38 @@ TO-DO:
  - double speed hold down on right side of screen (only)
 */
 
+const lightBG: string[] = ['inbox', 'profile'];
+
 export default function BottomTabsLayout() {
+  const segments = useSegments();
+  const active = segments[segments.length - 1];
+  let tabStyle = lightBG.includes(active)
+    ? {
+        bg: '#fff',
+        text: '#000',
+        inactiveTint: '#8f8f8f9d',
+      }
+    : {
+        bg: '#000',
+        text: '#fff',
+        inactiveTint: '#e0e0e09d',
+      };
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#000',
-          height: 90,
+          backgroundColor: tabStyle.bg,
+          height: 85,
         },
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: '700',
+          color: tabStyle.text,
         },
-        tabBarInactiveTintColor: '#e0e0e09d',
-        tabBarActiveTintColor: '#fff',
+        tabBarInactiveTintColor: tabStyle.inactiveTint,
+        tabBarActiveTintColor: tabStyle.text,
       }}>
       <Tabs.Screen
         name="(top-tabs)"
