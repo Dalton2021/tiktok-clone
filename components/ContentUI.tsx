@@ -21,7 +21,7 @@ interface ContentUIProps {
 }
 
 const ContentUI = ({ post }: ContentUIProps) => {
-  const user = post.user!; // Non-null assertion since Content includes user data
+  const user = post.user!;
 
   return (
     <>
