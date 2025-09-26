@@ -4,6 +4,7 @@
     "firstName": "Alex",
     "lastName": "Johnson",
     "username": "alexcodes",
+    "icon": "https://picsum.photos/100/100?random=1",
     "email": "alex.johnson@email.com"
   },
   {
@@ -11,6 +12,7 @@
     "firstName": "Sarah",
     "lastName": "Chen",
     "username": "sarahdev",
+    "icon": "https://picsum.photos/100/100?random=2",
     "email": "sarah.chen@email.com"
   },
   {
@@ -18,6 +20,7 @@
     "firstName": "Mike",
     "lastName": "Rodriguez",
     "username": "mikebuilds",
+    "icon": "https://picsum.photos/100/100?random=3",
     "email": "mike.rodriguez@email.com"
   },
   {
@@ -25,6 +28,7 @@
     "firstName": "Emma",
     "lastName": "Thompson",
     "username": "emmadesigns",
+    "icon": "https://picsum.photos/100/100?random=4",
     "email": "emma.thompson@email.com"
   },
   {
@@ -32,6 +36,7 @@
     "firstName": "David",
     "lastName": "Kim",
     "username": "davidanims",
+    "icon": "https://picsum.photos/100/100?random=5",
     "email": "david.kim@email.com"
   },
   {
@@ -39,6 +44,7 @@
     "firstName": "Lisa",
     "lastName": "Williams",
     "username": "lisadebug",
+    "icon": "https://picsum.photos/100/100?random=6",
     "email": "lisa.williams@email.com"
   },
   {
@@ -46,6 +52,7 @@
     "firstName": "James",
     "lastName": "Brown",
     "username": "jamestech",
+    "icon": "https://picsum.photos/100/100?random=7",
     "email": "james.brown@email.com"
   },
   {
@@ -53,6 +60,7 @@
     "firstName": "Anna",
     "lastName": "Davis",
     "username": "annafullstack",
+    "icon": "https://picsum.photos/100/100?random=8",
     "email": "anna.davis@email.com"
   },
   {
@@ -60,6 +68,7 @@
     "firstName": "Carlos",
     "lastName": "Garcia",
     "username": "carlosmobile",
+    "icon": "https://picsum.photos/100/100?random=9",
     "email": "carlos.garcia@email.com"
   },
   {
@@ -67,6 +76,7 @@
     "firstName": "Sophie",
     "lastName": "Miller",
     "username": "sophieui",
+    "icon": "https://picsum.photos/100/100?random=10",
     "email": "sophie.miller@email.com"
   }
 ]

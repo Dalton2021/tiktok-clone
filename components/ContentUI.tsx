@@ -1,7 +1,12 @@
 import Post from '@/types/Post';
+import formatCompactNumber from '@/utils/compactNumber';
 import handleRenderTags from '@/utils/renderTags';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import Octicons from '@expo/vector-icons/Octicons';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import WhiteText from './ui/WhiteText';
 
 interface ContentUIProps {
@@ -13,20 +18,59 @@ const ContentUI = ({ post }: ContentUIProps) => {
 
   return (
     <>
+      {/* Content */}
       <View style={styles.flexContainer}>
-        <View style={styles.contentContainer}>
-          <WhiteText style={styles.username}>{user.username}</WhiteText>
-          <View>
-            <WhiteText style={styles.contentText}>
-              {post.caption} {handleRenderTags(post.tags) || ''}
-            </WhiteText>
+        <View style={styles.flexRow}>
+          <View style={styles.contentCol}>
+            <View style={styles.contentContainer}>
+              <WhiteText style={styles.username}>{user.username}</WhiteText>
+              <View>
+                <WhiteText style={styles.contentText}>
+                  {post.caption} {handleRenderTags(post.tags) || ''}
+                </WhiteText>
+              </View>
+            </View>
+          </View>
+          <View style={styles.activityCol}>
+            <View style={styles.activityContainer}>
+              <View style={styles.activityPressableContainer}>
+                <Image source={{ uri: `${user.icon}` }} style={styles.userIcon} />
+              </View>
+              <View style={styles.activityPressableContainer}>
+                <WhiteText>
+                  <AntDesign name="heart" size={28} style={{ borderWidth: 3, borderColor: '#000' }} />
+                </WhiteText>
+                <WhiteText style={styles.activityPressableText}>{formatCompactNumber(post.likes)}</WhiteText>
+              </View>
+              <View style={styles.activityPressableContainer}>
+                <View>
+                  <Ionicons name="chatbubble-ellipses" size={30} style={styles.flippedIcon} />
+                </View>
+                <WhiteText style={styles.activityPressableText}>
+                  {formatCompactNumber(post.comments)}
+                </WhiteText>
+              </View>
+              <View style={styles.activityPressableContainer}>
+                <WhiteText>
+                  <Octicons name="bookmark-filled" size={30} />
+                </WhiteText>
+                <WhiteText style={styles.activityPressableText}>{formatCompactNumber(post.saves)}</WhiteText>
+              </View>
+              <View style={styles.activityPressableContainer}>
+                <WhiteText>
+                  <FontAwesome6 name="share" size={30} />
+                </WhiteText>
+                <WhiteText style={styles.activityPressableText}>{formatCompactNumber(post.shares)}</WhiteText>
+              </View>
+              <View style={styles.activityPressableContainer}>
+                <View>
+                  <Image source={{ uri: `${user.icon}` }} style={styles.soundIcon} />
+                </View>
+              </View>
+            </View>
           </View>
         </View>
       </View>
-      {/* sidebar */}
-      {/* <View style={styles.interactiveContainer}>
-        <Text style={styles.text}>ContentUI</Text>
-      </View> */}
     </>
   );
 };
@@ -35,24 +79,21 @@ export default ContentUI;
 
 const styles = StyleSheet.create({
   interactiveContainer: {
-    position: 'absolute',
-    right: 10,
-    bottom: 100,
-    padding: 10,
+    width: '20%',
+    backgroundColor: '#e4a0a0ff',
   },
   contentContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 16,
-    paddingBottom: 20,
-    width: '80%',
-    height: 90,
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingHorizontal: 16,
+    paddingBottom: 15,
   },
   flexContainer: {
     flex: 1,
-    position: 'relative',
+    justifyContent: 'flex-end',
+  },
+  flexRow: {
+    flexDirection: 'row',
   },
   username: {
     fontWeight: '700',
@@ -61,5 +102,39 @@ const styles = StyleSheet.create({
   },
   contentText: {
     color: '#eee',
+  },
+  contentCol: {
+    flex: 0.85,
+  },
+  activityCol: {
+    flex: 0.15,
+    backgroundColor: '#e98b8bff',
+  },
+  activityContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  userIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  soundIcon: {
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
+  },
+  activityPressableContainer: {
+    paddingVertical: 11,
+  },
+  activityPressableText: {
+    paddingTop: 3,
+    textAlign: 'center',
+  },
+  flippedIcon: {
+    transform: [{ scaleX: -1 }],
+    color: '#fff',
   },
 });

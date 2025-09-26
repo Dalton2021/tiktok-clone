@@ -25,30 +25,29 @@ export default function Content({ data }: ContentProps) {
   const bottomTabBarHeight = useBottomTabBarHeight();
   const availableHeight = React.useMemo(() => height - bottomTabBarHeight, [bottomTabBarHeight]);
 
-  // Filter posts and include user data (EF Core Include equivalent)
-  const validPosts = React.useMemo(() => posts
-    .map(post => {
-      const user = users.find(u => u.id === post.user_id);
+  const validPosts = posts
+    .map((post) => {
+      const user = users.find((u) => u.id === post.user_id);
       return user ? { ...post, user } : null;
     })
-    .filter((post): post is Post & { user: User } => post !== null), []);
-
-  const renderItem = React.useCallback(({ item }: { item: Post & { user: User } }) => (
-    <View style={[styles.contentView, { height: availableHeight }]}>
-      <ContentUI post={item} />
-    </View>
-  ), [availableHeight]);
+    .filter((post): post is Post & { user: User } => post !== null);
 
   return (
     <View>
       <FlatList
         data={validPosts}
         keyExtractor={(item) => item.id}
-        snapToInterval={availableHeight}
-        snapToAlignment="start"
+        // snapToInterval={availableHeight}
+        // snapToAlignment="start"
         decelerationRate={'fast'}
+        pagingEnabled
+        horizontal={false}
         showsVerticalScrollIndicator={false}
-        renderItem={renderItem}
+        renderItem={({ item }) => (
+          <View style={[styles.contentView, { height: availableHeight }]}>
+            <ContentUI post={item} />
+          </View>
+        )}
       />
     </View>
   );
@@ -57,7 +56,7 @@ export default function Content({ data }: ContentProps) {
 const styles = StyleSheet.create({
   contentView: {
     borderBottomWidth: 1,
-    borderBottomColor: '#3b3b3b96',
+    borderBottomColor: '#3b3b3bbe',
   },
   text: {
     color: '#fff',
