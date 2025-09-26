@@ -1,0 +1,72 @@
+[
+  {
+    "id": "user_1",
+    "firstName": "Alex",
+    "lastName": "Johnson",
+    "username": "alexcodes",
+    "email": "alex.johnson@email.com"
+  },
+  {
+    "id": "user_2",
+    "firstName": "Sarah",
+    "lastName": "Chen",
+    "username": "sarahdev",
+    "email": "sarah.chen@email.com"
+  },
+  {
+    "id": "user_3",
+    "firstName": "Mike",
+    "lastName": "Rodriguez",
+    "username": "mikebuilds",
+    "email": "mike.rodriguez@email.com"
+  },
+  {
+    "id": "user_4",
+    "firstName": "Emma",
+    "lastName": "Thompson",
+    "username": "emmadesigns",
+    "email": "emma.thompson@email.com"
+  },
+  {
+    "id": "user_5",
+    "firstName": "David",
+    "lastName": "Kim",
+    "username": "davidanims",
+    "email": "david.kim@email.com"
+  },
+  {
+    "id": "user_6",
+    "firstName": "Lisa",
+    "lastName": "Williams",
+    "username": "lisadebug",
+    "email": "lisa.williams@email.com"
+  },
+  {
+    "id": "user_7",
+    "firstName": "James",
+    "lastName": "Brown",
+    "username": "jamestech",
+    "email": "james.brown@email.com"
+  },
+  {
+    "id": "user_8",
+    "firstName": "Anna",
+    "lastName": "Davis",
+    "username": "annafullstack",
+    "email": "anna.davis@email.com"
+  },
+  {
+    "id": "user_9",
+    "firstName": "Carlos",
+    "lastName": "Garcia",
+    "username": "carlosmobile",
+    "email": "carlos.garcia@email.com"
+  },
+  {
+    "id": "user_10",
+    "firstName": "Sophie",
+    "lastName": "Miller",
+    "username": "sophieui",
+    "email": "sophie.miller@email.com"
+  }
+]

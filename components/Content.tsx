@@ -1,5 +1,11 @@
+import Post from '@/types/Post';
+import User from '@/types/User';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
+import postsData from '../data/postsData.json';
+import usersData from '../data/usersData.json';
+import ContentUI from './ContentUI';
 
 interface ContentItem {
   id: string;
@@ -21,19 +27,33 @@ function getRandomHex(): string {
   return '#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('');
 }
 
+const posts: Post[] = postsData;
+const users: User[] = usersData;
+
 export default function Content({ data }: ContentProps) {
+  const bottomTabBarHeight = useBottomTabBarHeight();
+  const availableHeight = height - bottomTabBarHeight;
+
+  // Filter posts and include user data (EF Core Include equivalent)
+  const validPosts = posts
+    .map(post => {
+      const user = users.find(u => u.id === post.user_id);
+      return user ? { ...post, user } : null;
+    })
+    .filter((post): post is Post & { user: User } => post !== null);
+
   return (
     <View>
       <FlatList
-        data={data}
+        data={validPosts}
         keyExtractor={(item) => item.id}
-        snapToInterval={height}
+        snapToInterval={availableHeight}
         snapToAlignment="start"
         decelerationRate={'fast'}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <View style={[styles.contentView, { backgroundColor: getRandomHex() }]}>
-            <Text style={styles.text}>{item.title}</Text>
+          <View style={[styles.contentView, { backgroundColor: getRandomHex(), height: availableHeight }]}>
+            <ContentUI post={item} />
           </View>
         )}
       />
@@ -43,10 +63,6 @@ export default function Content({ data }: ContentProps) {
 
 const styles = StyleSheet.create({
   contentView: {
-    height,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: getRandomHex(),
     borderBottomWidth: 1,
     borderBottomColor: '#3b3b3b96',
   },
