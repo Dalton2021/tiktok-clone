@@ -195,7 +195,12 @@ const ContentVideo = ({ source, style, children, height, active }: ContentVideoP
           maxPointers={1}>
           <View style={styles.progressBarContainer} ref={progressBarRef} onLayout={onProgressBarLayout}>
             <Pressable onPress={handleProgressBarPress}>
-              <ProgressBar progress={progress} color="#fff" style={styles.progressBar} />
+              <ProgressBar progress={progress} color={isDragging ? "#fff" : "#eeeeee6e"} style={styles.progressBar} />
+              {isDragging && (
+                <View style={[styles.progressThumb, { left: `${(progress * 100)}%` }]}>
+                  <View style={styles.thumbIcon} />
+                </View>
+              )}
             </Pressable>
           </View>
         </PanGestureHandler>
@@ -260,13 +265,33 @@ const styles = StyleSheet.create({
     bottom: -12, // Move container down to maintain visual position
     left: 0,
     right: 0,
-    paddingHorizontal: 4,
+    // paddingHorizontal: 4,
     paddingVertical: 12, // Restore gesture area
     zIndex: 4,
   },
   progressBar: {
     height: 3,
     borderRadius: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: 'rgba(206, 206, 206, 0.3)',
+  },
+  progressThumb: {
+    position: 'absolute',
+    top: -8,
+    marginLeft: -8,
+    width: 16,
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  thumbIcon: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 3,
   },
 });
