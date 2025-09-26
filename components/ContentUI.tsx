@@ -33,8 +33,9 @@ const ContentUI = ({ post }: ContentUIProps) => {
           </View>
           <View style={styles.activityCol}>
             <View style={styles.activityContainer}>
-              <View style={styles.activityPressableContainer}>
+              <View style={[styles.activityPressableContainer, styles.userIconContainer]}>
                 <Image source={{ uri: `${user.icon}` }} style={styles.userIcon} />
+                <WhiteText style={styles.followButton}>+</WhiteText>
               </View>
               <View style={styles.activityPressableContainer}>
                 <WhiteText>
@@ -108,7 +109,6 @@ const styles = StyleSheet.create({
   },
   activityCol: {
     flex: 0.15,
-    backgroundColor: '#e98b8bff',
   },
   activityContainer: {
     flexDirection: 'column',
@@ -117,9 +117,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   userIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 42,
+    height: 42,
+    borderRadius: 21.5,
   },
   soundIcon: {
     width: 35,
@@ -136,5 +136,21 @@ const styles = StyleSheet.create({
   flippedIcon: {
     transform: [{ scaleX: -1 }],
     color: '#fff',
+  },
+  followButton: {
+    position: 'absolute',
+    bottom: 2, // Adjust this to control overlap
+    alignSelf: 'center',
+    textAlign: 'center',
+    backgroundColor: '#ff3c66ff',
+    borderRadius: 100,
+    fontSize: 22,
+    width: 22,
+    height: 22,
+    lineHeight: 22,
+  },
+  userIconContainer: {
+    position: 'relative',
+    marginBottom: 10,
   },
 });

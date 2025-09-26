@@ -40,7 +40,7 @@ export default function Content({ data }: ContentProps) {
         // snapToInterval={availableHeight}
         // snapToAlignment="start"
         decelerationRate={'fast'}
-        pagingEnabled
+        pagingEnabled // makes sure user can only scroll one item at a time.
         horizontal={false}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
