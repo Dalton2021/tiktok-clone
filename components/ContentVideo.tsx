@@ -1,5 +1,5 @@
 import { VideoView, useVideoPlayer } from 'expo-video';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 /*
@@ -18,6 +18,7 @@ interface ContentVideoProps {
   children: React.ReactNode;
   style: StyleProp<ViewStyle>;
   height: number;
+  active: boolean;
 }
 
 // handles mapping to assets/videos. Is this too large a variable?
@@ -30,14 +31,13 @@ allVideos.keys().forEach((key: string) => {
   videoAssets[fileName] = allVideos(key);
 });
 
-const ContentVideo = ({ source, style, children, height }: ContentVideoProps) => {
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+const ContentVideo = ({ source, style, children, height, active }: ContentVideoProps) => {
+  const [isPlaying, setIsPlaying] = useState<boolean>(active);
 
   const videoSource = videoAssets[source];
 
   const player = useVideoPlayer(videoSource, (player) => {
     player.loop = true;
-    player.play();
   });
 
   const togglePlayback = useCallback(() => {
@@ -49,6 +49,18 @@ const ContentVideo = ({ source, style, children, height }: ContentVideoProps) =>
 
     setIsPlaying(!isPlaying);
   }, [isPlaying, player]);
+
+  // Control playback based on active prop
+  useEffect(() => {
+    if (active) {
+      player.play();
+      setIsPlaying(true);
+    } else {
+      player.currentTime = 0;
+      player.pause();
+      setIsPlaying(false);
+    }
+  }, [active, player]);
 
   return (
     <View style={[style, { height, position: 'relative' }]}>
