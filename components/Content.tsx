@@ -6,6 +6,7 @@ import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
 import postsData from '../data/postsData.json';
 import usersData from '../data/usersData.json';
 import ContentUI from './ContentUI';
+import ContentVideo from './ContentVideo';
 
 interface ContentItem {
   id: string;
@@ -44,9 +45,12 @@ export default function Content({ data }: ContentProps) {
         horizontal={false}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <View style={[styles.contentView, { height: availableHeight }]}>
+          <ContentVideo
+            source={item.video_url}
+            height={availableHeight}
+            style={[styles.contentView, { height: availableHeight }]}>
             <ContentUI post={item} />
-          </View>
+          </ContentVideo>
         )}
       />
     </View>

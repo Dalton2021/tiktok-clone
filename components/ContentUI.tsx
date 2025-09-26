@@ -9,6 +9,13 @@ import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import WhiteText from './ui/WhiteText';
 
+/*
+TO-DO:
+-------
+ - modals for comments.
+ 
+*/
+
 interface ContentUIProps {
   post: Post;
 }
