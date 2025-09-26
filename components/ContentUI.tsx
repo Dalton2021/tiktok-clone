@@ -13,7 +13,7 @@ import WhiteText from './ui/WhiteText';
 TO-DO:
 -------
  - modals for comments.
- 
+
 */
 
 interface ContentUIProps {
@@ -33,7 +33,8 @@ const ContentUI = ({ post }: ContentUIProps) => {
               <WhiteText style={styles.username}>{user.username}</WhiteText>
               <View>
                 <WhiteText style={styles.contentText}>
-                  {post.caption} {handleRenderTags(post.tags) || ''}
+                  {post.caption}{' '}
+                  <WhiteText style={styles.contentTags}>{handleRenderTags(post.tags) || ''}</WhiteText>
                 </WhiteText>
               </View>
             </View>
@@ -105,10 +106,15 @@ const styles = StyleSheet.create({
   },
   username: {
     fontWeight: '700',
-    fontSize: 15,
+    fontSize: 16,
     marginBottom: 10,
   },
   contentText: {
+    fontSize: 16,
+    color: '#eee',
+  },
+  contentTags: {
+    fontWeight: '600',
     color: '#eee',
   },
   contentCol: {
@@ -134,7 +140,7 @@ const styles = StyleSheet.create({
     borderRadius: 17.5,
   },
   activityPressableContainer: {
-    paddingVertical: 11,
+    paddingVertical: 9,
   },
   activityPressableText: {
     paddingTop: 3,

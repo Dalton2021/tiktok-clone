@@ -1,16 +1,14 @@
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { LinearGradient } from 'expo-linear-gradient';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 /*
 TO-DO:
 -------
- - pause icon
  - video bar
- - videos with sound?
- - play/pause restart on each scroll of flat list item
- - videos are all playing underneath each other, only the active scroll needs to be playing. probably need a focused state or something from flat list.
-
+ - pull to refresh -> add this to hitting the home button too
 */
 
 interface ContentVideoProps {
@@ -76,11 +74,25 @@ const ContentVideo = ({ source, style, children, height, active }: ContentVideoP
         />
       </View>
 
+      {/* Shadow/Vignette overlay - lets the text display a hair better */}
+      <LinearGradient
+        colors={['transparent', 'rgba(0, 0, 0, 0.44)']}
+        style={styles.shadowOverlay}
+        pointerEvents="none"
+      />
+
       {/* Tap overlay - covers entire area for pause/play */}
       <Pressable onPress={togglePlayback} style={styles.tapOverlay} />
 
       {/* UI layer - floats on top */}
       <View style={styles.uiContainer} pointerEvents="box-none">
+        {active && !isPlaying && (
+          <View style={styles.pauseContainer}>
+            <Text style={styles.pauseIcon}>
+              <FontAwesome5 name="play" size={60} />
+            </Text>
+          </View>
+        )}
         {children}
       </View>
     </View>
@@ -102,13 +114,21 @@ const styles = StyleSheet.create({
     height: '100%',
     aspectRatio: '9 / 16',
   },
+  shadowOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: '50%', // Covers bottom half with gradient
+    zIndex: 1, // Changed from 0.5 to 1
+  },
   tapOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: 1,
+    zIndex: 2,
   },
   uiContainer: {
     position: 'absolute',
@@ -116,6 +136,18 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: 2,
+    zIndex: 3,
+  },
+  pauseContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pauseIcon: {
+    color: '#eeeeee65',
   },
 });

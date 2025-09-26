@@ -1,7 +1,7 @@
 import Post from '@/types/Post';
 import User from '@/types/User';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Dimensions, FlatList, ListRenderItemInfo, StyleSheet, View, ViewToken } from 'react-native';
 import postsData from '../data/postsData.json';
 import usersData from '../data/usersData.json';
@@ -43,10 +43,6 @@ export default function Content({ data }: ContentProps) {
       setCurrentItem(firstVisible);
     }
   });
-
-  useEffect(() => {
-    console.log('current', currentItem?.id);
-  }, [currentItem]);
 
   return (
     <View>
