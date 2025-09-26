@@ -38,7 +38,7 @@ const ContentVideo = ({ source, style, children, height, active }: ContentVideoP
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragProgress, setDragProgress] = useState<number>(0);
   const progressBarRef = useRef<View>(null);
-  const seekTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const seekTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const videoSource = videoAssets[source];
 
   const player = useVideoPlayer(videoSource, (player) => {
@@ -91,9 +91,7 @@ const ContentVideo = ({ source, style, children, height, active }: ContentVideoP
   }, []);
 
   // Calculate progress (0 to 1 for react-native-paper)
-  const progress = isDragging
-    ? dragProgress / 100
-    : duration > 0 ? currentTime / duration : 0;
+  const progress = isDragging ? dragProgress / 100 : duration > 0 ? currentTime / duration : 0;
 
   // Handle seeking on progress bar
   const handleProgressBarPress = (event: any) => {
@@ -107,14 +105,17 @@ const ContentVideo = ({ source, style, children, height, active }: ContentVideoP
   };
 
   // Debounced seek function
-  const debouncedSeek = useCallback((time: number) => {
-    if (seekTimeoutRef.current) {
-      clearTimeout(seekTimeoutRef.current);
-    }
-    seekTimeoutRef.current = setTimeout(() => {
-      player.currentTime = time;
-    }, 50); // 50ms debounce
-  }, [player]);
+  const debouncedSeek = useCallback(
+    (time: number) => {
+      if (seekTimeoutRef.current) {
+        clearTimeout(seekTimeoutRef.current);
+      }
+      seekTimeoutRef.current = setTimeout(() => {
+        player.currentTime = time;
+      }, 50); // 50ms debounce
+    },
+    [player]
+  );
 
   // Handle pan gesture for seeking
   const handlePanGesture = (event: any) => {
@@ -194,11 +195,7 @@ const ContentVideo = ({ source, style, children, height, active }: ContentVideoP
           maxPointers={1}>
           <View style={styles.progressBarContainer} ref={progressBarRef} onLayout={onProgressBarLayout}>
             <Pressable onPress={handleProgressBarPress}>
-              <ProgressBar
-                progress={progress}
-                color="#fff"
-                style={styles.progressBar}
-              />
+              <ProgressBar progress={progress} color="#fff" style={styles.progressBar} />
             </Pressable>
           </View>
         </PanGestureHandler>
@@ -260,11 +257,11 @@ const styles = StyleSheet.create({
   },
   progressBarContainer: {
     position: 'absolute',
-    bottom: 0,
+    bottom: -12, // Move container down to maintain visual position
     left: 0,
     right: 0,
     paddingHorizontal: 4,
-    paddingVertical: 12, // Larger tap area
+    paddingVertical: 12, // Restore gesture area
     zIndex: 4,
   },
   progressBar: {
