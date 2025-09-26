@@ -17,30 +17,27 @@ interface ContentProps {
 }
 
 const { height } = Dimensions.get('window');
-function getRandomHex(): string {
-  // Generate RGB values in the lighter range (e.g., 128–255)
-  const r = Math.floor(50 + Math.random() * 128);
-  const g = Math.floor(30 + Math.random() * 128);
-  const b = Math.floor(80 + Math.random() * 128);
-
-  // Convert to hex and return
-  return '#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('');
-}
 
 const posts: Post[] = postsData;
 const users: User[] = usersData;
 
 export default function Content({ data }: ContentProps) {
   const bottomTabBarHeight = useBottomTabBarHeight();
-  const availableHeight = height - bottomTabBarHeight;
+  const availableHeight = React.useMemo(() => height - bottomTabBarHeight, [bottomTabBarHeight]);
 
   // Filter posts and include user data (EF Core Include equivalent)
-  const validPosts = posts
+  const validPosts = React.useMemo(() => posts
     .map(post => {
       const user = users.find(u => u.id === post.user_id);
       return user ? { ...post, user } : null;
     })
-    .filter((post): post is Post & { user: User } => post !== null);
+    .filter((post): post is Post & { user: User } => post !== null), []);
+
+  const renderItem = React.useCallback(({ item }: { item: Post & { user: User } }) => (
+    <View style={[styles.contentView, { height: availableHeight }]}>
+      <ContentUI post={item} />
+    </View>
+  ), [availableHeight]);
 
   return (
     <View>
@@ -51,11 +48,7 @@ export default function Content({ data }: ContentProps) {
         snapToAlignment="start"
         decelerationRate={'fast'}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <View style={[styles.contentView, { backgroundColor: getRandomHex(), height: availableHeight }]}>
-            <ContentUI post={item} />
-          </View>
-        )}
+        renderItem={renderItem}
       />
     </View>
   );

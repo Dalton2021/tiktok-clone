@@ -61,7 +61,7 @@ export default function TopTabsLayout() {
         <Tabs.Screen name="explore" options={{ title: 'Explore' }} />
         <Tabs.Screen name="following" options={{ title: 'Following' }} />
         <Tabs.Screen name="shop" options={{ title: 'Shop' }} />
-        <Tabs.Screen name="index" options={{ title: 'For You' }} />
+        <Tabs.Screen name="index" options={{ title: 'For You', }} />
       </Tabs>
     </View>
   );

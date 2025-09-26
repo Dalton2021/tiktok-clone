@@ -30,7 +30,7 @@ const data = [
 
 export default function HomeScreen() {
   return (
-    <View>
+    <View style={{backgroundColor: "#494747ff"}}>
       <Content data={data} />
     </View>
   );
